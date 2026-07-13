@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nextour - Your Next Journey Starts Here</title>
+    <meta name="description" content="Discover premium holiday packages, cozy homestays, and seamless travel booking redirection with Nextour.">
+    <!-- CSS File -->
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/theme.js"></script>
+</head>
+<body>
+
+    <!-- Sticky Navigation -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            Nextour <span class="logo-dot"></span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#home" class="active">Home</a></li>
+            <li><a href="#packages">Tour Packages</a></li>
+            <li><a href="#homestays">Homestays</a></li>
+            <li><a href="#offers">Offers</a></li>
+            <li><a href="#blogs">Travel Blog</a></li>
+            <li><a href="#faq">FAQs</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="nav-actions" id="nav-actions-container">
+            <!-- Theme Toggle -->
+            <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Day / Night Mode">
+                <div class="theme-toggle-thumb">🌙</div>
+            </div>
+            <!-- Dynamically populated by JS (Auth status) -->
+            <a href="portal.html" class="btn btn-outline">Sign In</a>
+            <a href="owner.html" class="btn btn-primary">Host Homestay</a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <!-- Hero Section & Search Engine -->
+        <section class="hero" id="home">
+            <h1>Find Your Next <span>Extraordinary</span> Adventure</h1>
+            <p>Explore hand-picked holiday packages and cozy local homestays curated for travelers who seek authentic experiences.</p>
+            
+            <!-- Global Search Bar -->
+            <div class="search-container">
+                <div class="search-tabs">
+                    <button class="search-tab-btn active" onclick="switchSearchTab('packages')">Holiday Packages</button>
+                    <button class="search-tab-btn" onclick="switchSearchTab('homestays')">Homestays</button>
+                </div>
+                <form class="search-form" id="search-form" onsubmit="handleSearch(event)">
+                    <div class="search-input-group">
+                        <label for="search-destination">Where to?</label>
+                        <input type="text" id="search-destination" placeholder="Enter destination..." required>
+                    </div>
+                    <div class="search-input-group">
+                        <label id="search-date-label" for="search-date">Start Date</label>
+                        <input type="date" id="search-date">
+                    </div>
+                    <div class="search-input-group">
+                        <label for="search-duration">Duration / Type</label>
+                        <select id="search-duration">
+                            <option value="">Any</option>
+                            <!-- Populated dynamically based on tab -->
+                        </select>
+                    </div>
+                    <div class="search-input-group">
+                        <label for="search-guests">Guests</label>
+                        <input type="number" id="search-guests" min="1" max="10" value="2">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="height: 48px; border-radius: 8px;">Explore</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Redirect Services Navigation -->
+        <section class="section" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+            <div class="section-header">
+                <span class="section-subtitle">Instant Booking Redirections</span>
+                <h2 class="section-title">Essential Travel Services</h2>
+                <p class="section-desc">Instantly search and book flights, hotels, and more via our operational portal click2pays.com.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <span class="service-icon">✈️</span>
+                    <h3>Flight Booking</h3>
+                    <p>Find the cheapest domestic and international airfares instantly.</p>
+                    <button class="btn btn-outline" onclick="triggerRedirect('Flight Booking')">Book Flights</button>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🏨</span>
+                    <h3>Hotel Booking</h3>
+                    <p>Compare luxury hotels, business stays, and budget lodgings globally.</p>
+                    <button class="btn btn-outline" onclick="triggerRedirect('Hotel Booking')">Book Hotels</button>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🚌</span>
+                    <h3>Bus Booking</h3>
+                    <p>Intercity bus tickets, sleeper coaches, and luxury shuttle rides.</p>
+                    <button class="btn btn-outline" onclick="triggerRedirect('Bus Booking')">Book Buses</button>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🚢</span>
+                    <h3>Cruise Booking</h3>
+                    <p>Embark on luxurious oceanic journeys and scenic river cruises.</p>
+                    <button class="btn btn-outline" onclick="triggerRedirect('Cruise Booking')">Book Cruises</button>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">📝</span>
+                    <h3>Visa Assistance</h3>
+                    <p>Fast-track tourist visas, documentation support, and e-visa filing.</p>
+                    <button class="btn btn-outline" onclick="triggerRedirect('Visa Assistance')">Get Visa Help</button>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🛡️</span>
+                    <h3>Travel Insurance</h3>
+                    <p>Cover emergency medical costs, trip delays, and lost baggage.</p>
+                    <button class="btn btn-outline" onclick="triggerRedirect('Travel Insurance')">Buy Insurance</button>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🚖</span>
+                    <h3>Airport Transfer</h3>
+                    <p>Pre-booked airport taxis, private shuttles, and luxury transfers.</p>
+                    <button class="btn btn-outline" onclick="triggerRedirect('Airport Transfer')">Book Transfer</button>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🚗</span>
+                    <h3>Car Rental</h3>
+                    <p>Self-drive cars, local chauffeur rides, and outstation taxi hire.</p>
+                    <button class="btn btn-outline" onclick="triggerRedirect('Car Rental')">Rent Cars</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Holiday Packages Section -->
+        <section class="section" id="packages">
+            <div class="section-header">
+                <span class="section-subtitle">Curated Experiences</span>
+                <h2 class="section-title">Holiday Packages</h2>
+                <p class="section-desc">Hand-crafted travel itineraries compiled by tour experts. All-inclusive luxury and adventure packages.</p>
+            </div>
+            
+            <div class="filter-bar">
+                <div class="filter-group" id="pkg-filter-group">
+                    <button class="filter-btn active" onclick="filterPackages('all')">All Packages</button>
+                    <button class="filter-btn" onclick="filterPackages('domestic')">Domestic</button>
+                    <button class="filter-btn" onclick="filterPackages('international')">International</button>
+                </div>
+                <div style="font-size: 0.9rem; color: var(--text-secondary);" id="pkg-count-display">Showing 3 packages</div>
+            </div>
+
+            <div class="grid-cards" id="packages-container">
+                <!-- Populated dynamically by JS -->
+            </div>
+        </section>
+
+        <!-- Homestays Section -->
+        <section class="section" id="homestays" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-color);">
+            <div class="section-header">
+                <span class="section-subtitle">Local Living</span>
+                <h2 class="section-title">Featured Homestays</h2>
+                <p class="section-desc">Stay with locals, enjoy authentic home-cooked meals, and experience destinations like a resident.</p>
+            </div>
+
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <input type="text" id="homestay-search-input" placeholder="Search by location..." class="form-control" style="background-color: var(--bg-primary); font-size: 0.85rem; width: 250px; height: 35px; border-radius: 20px; padding: 0 1rem;" oninput="filterHomestays()">
+                </div>
+                <div style="font-size: 0.9rem; color: var(--text-secondary);" id="homestay-count-display">Showing 2 homestays</div>
+            </div>
+
+            <div class="grid-cards" id="homestays-container">
+                <!-- Populated dynamically by JS -->
+            </div>
+        </section>
+
+        <!-- Offers Section -->
+        <section class="section" id="offers">
+            <div class="section-header">
+                <span class="section-subtitle">Deals & Coupons</span>
+                <h2 class="section-title">Exclusive Travel Offers</h2>
+                <p class="section-desc">Unlock massive savings on your journeys with these handpicked promotional discounts.</p>
+            </div>
+            <div class="services-grid" id="offers-container" style="grid-template-columns: repeat(2, 1fr);">
+                <!-- Populated dynamically by JS -->
+            </div>
+        </section>
+
+        <!-- Travel Blog Section -->
+        <section class="section" id="blogs" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-color);">
+            <div class="section-header">
+                <span class="section-subtitle">Nextour Travelogue</span>
+                <h2 class="section-title">Latest Travel Stories</h2>
+                <p class="section-desc">Read expert travel guides, destination tips, pack hacks, and cultural insights.</p>
+            </div>
+            <div class="grid-cards" id="blogs-container">
+                <!-- Populated dynamically by JS -->
+            </div>
+        </section>
+
+        <!-- Gallery & Testimonials Section -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-subtitle">Visual Highlights</span>
+                <h2 class="section-title">Wanderlust Gallery</h2>
+            </div>
+            <div class="grid-cards" style="grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                <div class="card" style="height: 250px;"><img class="card-img" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500" alt="Beach"></div>
+                <div class="card" style="height: 250px;"><img class="card-img" src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=500" alt="Boat"></div>
+                <div class="card" style="height: 250px;"><img class="card-img" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500" alt="Valley"></div>
+                <div class="card" style="height: 250px;"><img class="card-img" src="https://images.unsplash.com/photo-1433832597046-4f10e10ac764?w=500" alt="Hot Air Balloon"></div>
+            </div>
+
+            <div class="section-header" style="margin-top: 6rem; margin-bottom: 3rem;">
+                <span class="section-subtitle">Customer Love</span>
+                <h2 class="section-title">What Our Travelers Say</h2>
+            </div>
+            <div class="grid-cards" style="grid-template-columns: repeat(2, 1fr);" id="testimonials-container">
+                <!-- Populated dynamically by JS -->
+            </div>
+        </section>
+
+        <!-- FAQs Section -->
+        <section class="section" id="faq" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-color);">
+            <div class="section-header">
+                <span class="section-subtitle">Frequently Asked Questions</span>
+                <h2 class="section-title">Got Questions? We Have Answers</h2>
+            </div>
+            <div class="faq-accordion" id="faq-container">
+                <div class="faq-item">
+                    <button class="faq-trigger" onclick="toggleFaq(this)">
+                        How do I book a Homestay?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        To book a homestay, browse the list, select a room, and enter check-in/out dates. Submit a booking request. Once the homestay owner approves the request, you can pay at the property during check-in.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-trigger" onclick="toggleFaq(this)">
+                        What services redirect to click2pays.com?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Essential flight booking, hotel bookings, cruises, car rentals, visa assistance, and airport transfers are operational on our partner portal click2pays.com. The "Book Now" buttons redirect you securely.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-trigger" onclick="toggleFaq(this)">
+                        Are holiday package bookings immediate?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Yes, packages are booked instantly. You will pay online via our simulated Razorpay checkout, and confirmation is generated immediately inside your Customer Portal.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="section" id="contact">
+            <div class="section-header">
+                <span class="section-subtitle">Get in Touch</span>
+                <h2 class="section-title">Contact Our Experts</h2>
+                <p class="section-desc">Need assistance customizing an itinerary or listing a property? Send us a message.</p>
+            </div>
+            <div class="grid-cards" style="grid-template-columns: 2fr 1fr; align-items: start;">
+                <form class="card" style="padding: 2.5rem;" onsubmit="handleContactSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contact-name">Full Name</label>
+                            <input type="text" id="contact-name" class="form-control" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-email">Email Address</label>
+                            <input type="email" id="contact-email" class="form-control" placeholder="john@example.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-subject">Subject</label>
+                        <input type="text" id="contact-subject" class="form-control" placeholder="Customizing Bali Package..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-message">Message</label>
+                        <textarea id="contact-message" class="form-control" rows="5" placeholder="Write your message here..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="align-self: flex-start;">Send Enquiry</button>
+                </form>
+
+                <div class="card" style="padding: 2.5rem; gap: 1.5rem;">
+                    <h3>Office Details</h3>
+                    <div>
+                        <p style="font-weight: 600; color: #fff;">Nextour Headquarters</p>
+                        <p style="color: var(--text-secondary);">102, Silver Jubilee Square, Park Street, Kolkata, India</p>
+                    </div>
+                    <div>
+                        <p style="font-weight: 600; color: #fff;">Call Us</p>
+                        <p style="color: var(--accent-emerald);">+91 98765 43210</p>
+                    </div>
+                    <div>
+                        <p style="font-weight: 600; color: #fff;">Email Us</p>
+                        <p style="color: var(--accent-emerald);">support@nextour.com</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-color); padding: 3rem 4rem 1.5rem; font-size: 0.9rem; color: var(--text-secondary);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                <a href="#" class="logo">Nextour <span class="logo-dot"></span></a>
+                <p>&copy; 2026 Nextour Ltd. All rights reserved. Prepared by Ronit Das.</p>
+            </div>
+            <div style="text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 1.5rem;">
+                <p>Protected by RBAC. Admin Panel and Vendor Dashboards are restricted areas.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Package Detail Modal -->
+    <div class="modal-overlay" id="package-detail-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="pkg-modal-title">Package Details</h3>
+                <button class="modal-close" onclick="closeModal('package-detail-modal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 0;">
+                <img id="pkg-modal-image" src="" alt="Package Banner" style="width:100%; height: 240px; object-fit: cover;">
+                <div style="padding: 2rem;">
+                    <div class="modal-tabs">
+                        <button class="modal-tab-btn active" onclick="switchModalTab('pkg-overview', this)">Overview</button>
+                        <button class="modal-tab-btn" onclick="switchModalTab('pkg-itinerary', this)">Itinerary</button>
+                        <button class="modal-tab-btn" onclick="switchModalTab('pkg-services', this)">Inclusions</button>
+                        <button class="modal-tab-btn" onclick="switchModalTab('pkg-faqs', this)">FAQs</button>
+                        <button class="modal-tab-btn" onclick="switchModalTab('pkg-booking', this)">Book Now</button>
+                    </div>
+
+                    <!-- Overview -->
+                    <div class="modal-tab-content active" id="pkg-overview">
+                        <h4>Highlights</h4>
+                        <ul id="pkg-modal-highlights" style="margin-left: 1.5rem; margin-bottom: 1.5rem;"></ul>
+                        <h4>Destination & Duration</h4>
+                        <p id="pkg-modal-desc" style="color: var(--text-secondary); margin-bottom: 1rem;"></p>
+                    </div>
+
+                    <!-- Itinerary -->
+                    <div class="modal-tab-content" id="pkg-itinerary">
+                        <div id="pkg-modal-itinerary-list" style="display:flex; flex-direction:column; gap:1rem;"></div>
+                    </div>
+
+                    <!-- Inclusions & Exclusions -->
+                    <div class="modal-tab-content" id="pkg-services">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+                            <div>
+                                <h4 style="color:var(--accent-emerald);">Included Services</h4>
+                                <ul id="pkg-modal-includes" style="margin-left: 1.5rem; font-size: 0.9rem;"></ul>
+                            </div>
+                            <div>
+                                <h4 style="color:var(--danger);">Excluded Services</h4>
+                                <ul id="pkg-modal-excludes" style="margin-left: 1.5rem; font-size: 0.9rem;"></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQs -->
+                    <div class="modal-tab-content" id="pkg-faqs">
+                        <div id="pkg-modal-faq-list" class="faq-accordion"></div>
+                    </div>
+
+                    <!-- Book Tab -->
+                    <div class="modal-tab-content" id="pkg-booking">
+                        <form id="pkg-booking-form" onsubmit="handlePkgBookingSubmit(event)">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="pkg-book-date">Travel Start Date</label>
+                                    <input type="date" id="pkg-book-date" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pkg-book-guests">Number of Guests</label>
+                                    <input type="number" id="pkg-book-guests" class="form-control" min="1" max="10" value="2" oninput="calculatePkgPrice()" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="pkg-book-phone">Contact Phone</label>
+                                    <input type="tel" id="pkg-book-phone" class="form-control" placeholder="10-digit number" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pkg-book-promo">Promo Coupon Code</label>
+                                    <input type="text" id="pkg-book-promo" class="form-control" placeholder="NEXTOURNEW" oninput="calculatePkgPrice()">
+                                </div>
+                            </div>
+                            <div style="background: var(--bg-tertiary); padding: 1.2rem; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 1rem; display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <span style="font-size:0.8rem; color:var(--text-secondary); text-transform:uppercase;">Price Details</span>
+                                    <div style="font-size:1.4rem; font-weight:700; color:var(--accent-emerald);" id="pkg-booking-total">₹0</div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Proceed to Pay</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Homestay Detail Modal -->
+    <div class="modal-overlay" id="homestay-detail-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="hs-modal-title">Homestay Details</h3>
+                <button class="modal-close" onclick="closeModal('homestay-detail-modal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 0;">
+                <img id="hs-modal-image" src="" alt="Homestay Banner" style="width:100%; height: 240px; object-fit: cover;">
+                <div style="padding: 2rem;">
+                    <div class="modal-tabs">
+                        <button class="modal-tab-btn active" onclick="switchModalTab('hs-overview', this)">Overview</button>
+                        <button class="modal-tab-btn" onclick="switchModalTab('hs-rooms', this)">Available Rooms</button>
+                        <button class="modal-tab-btn" onclick="switchModalTab('hs-rules', this)">House Rules</button>
+                        <button class="modal-tab-btn" onclick="switchModalTab('hs-reviews-tab', this)">Reviews</button>
+                    </div>
+
+                    <!-- Overview -->
+                    <div class="modal-tab-content active" id="hs-overview">
+                        <h4 style="margin-bottom:0.5rem;">Description</h4>
+                        <p id="hs-modal-desc" style="color:var(--text-secondary); margin-bottom:1.5rem;"></p>
+                        <h4 style="margin-bottom:0.5rem;">Amenities</h4>
+                        <div id="hs-modal-amenities" style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1.5rem;"></div>
+                        <h4 style="margin-bottom:0.5rem;">Location Map Pin</h4>
+                        <p id="hs-modal-location" style="color:var(--text-secondary); font-size:0.9rem; font-family:monospace;"></p>
+                    </div>
+
+                    <!-- Rooms & Booking Request -->
+                    <div class="modal-tab-content" id="hs-rooms">
+                        <div id="hs-modal-rooms-list" style="display:flex; flex-direction:column; gap:1rem; margin-bottom:1.5rem;"></div>
+                        
+                        <div id="hs-booking-form-wrapper" style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display:none;">
+                            <h4 style="margin-bottom: 1rem;">Submit Booking Request</h4>
+                            <form id="hs-booking-form" onsubmit="handleHsBookingSubmit(event)">
+                                <input type="hidden" id="hs-book-room-id">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="hs-book-checkin">Check-in Date</label>
+                                        <input type="date" id="hs-book-checkin" class="form-control" oninput="calculateHsPrice()" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hs-book-checkout">Check-out Date</label>
+                                        <input type="date" id="hs-book-checkout" class="form-control" oninput="calculateHsPrice()" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="hs-book-guests">Guests</label>
+                                        <input type="number" id="hs-book-guests" class="form-control" min="1" max="10" value="2" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hs-book-phone">Phone Number</label>
+                                        <input type="tel" id="hs-book-phone" class="form-control" placeholder="10-digit number" required>
+                                    </div>
+                                </div>
+                                <div style="background: var(--bg-tertiary); padding: 1.2rem; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 1rem; display:flex; justify-content:space-between; align-items:center;">
+                                    <div>
+                                        <span style="font-size:0.8rem; color:var(--text-secondary); text-transform:uppercase;">Room Type: <strong id="hs-book-room-name" style="color:#fff;">Deluxe</strong></span>
+                                        <div style="font-size:1.4rem; font-weight:700; color:var(--accent-emerald);" id="hs-booking-total">₹0</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit Booking Request</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Rules -->
+                    <div class="modal-tab-content" id="hs-rules">
+                        <ul id="hs-modal-rules-list" style="margin-left: 1.5rem; font-size: 0.95rem;"></ul>
+                    </div>
+
+                    <!-- Reviews -->
+                    <div class="modal-tab-content" id="hs-reviews-tab">
+                        <div id="hs-modal-reviews-list" style="display:flex; flex-direction:column; gap:1rem; max-height: 250px; overflow-y:auto;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Redirect Overlay Dialog -->
+    <div class="modal-overlay" id="redirect-modal">
+        <div class="modal" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3>Redirect Warning</h3>
+                <button class="modal-close" onclick="closeModal('redirect-modal')">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">✈️</div>
+                <h4 style="margin-bottom: 1rem;" id="redirect-title">Redirecting to click2pays.com</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                    You are exiting Nextour to complete your booking on our integrated payment/ticketing platform click2pays.com. No account data will be synced.
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <button class="btn btn-outline" onclick="closeModal('redirect-modal')">Cancel</button>
+                    <a href="https://click2pays.com" target="_blank" class="btn btn-primary" onclick="closeModal('redirect-modal')">Continue Booking</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Razorpay Checkout Simulator Overlay -->
+    <div class="modal-overlay" id="razorpay-modal">
+        <div class="razorpay-sim">
+            <div class="rp-header">
+                <span class="rp-logo">Razorpay Secur</span>
+                <span style="font-size: 0.8rem; cursor: pointer; opacity: 0.7;" onclick="closeModal('razorpay-modal')">&times; Cancel</span>
+            </div>
+            <div class="rp-body">
+                <p style="font-size: 0.85rem; color: var(--text-secondary); text-align: center; margin-bottom: 0.5rem;">PAYMENT FOR NEXTOUR HOLIDAY</p>
+                <div class="rp-amount" id="rp-amount-display">₹0.00</div>
+                <div class="form-group">
+                    <label>Simulated Card Number</label>
+                    <input type="text" class="form-control" value="4111 2222 3333 4444" disabled style="background:#222; text-align:center; letter-spacing: 2px;">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Expiry</label>
+                        <input type="text" class="form-control" value="12/29" disabled style="background:#222; text-align:center;">
+                    </div>
+                    <div class="form-group">
+                        <label>CVV</label>
+                        <input type="password" class="form-control" value="123" disabled style="background:#222; text-align:center;">
+                    </div>
+                </div>
+                <p style="font-size: 0.75rem; text-align: center; color: var(--accent-emerald); margin-top: 0.5rem;">✓ Sandbox Mode Enabled</p>
+                <button class="rp-btn" id="rp-submit-btn" onclick="completeSimulatedPayment()">Simulate Successful Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Script Files -->
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

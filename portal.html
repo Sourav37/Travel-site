@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Portal - Nextour</title>
+    <!-- CSS File -->
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/theme.js"></script>
+    <style>
+        .auth-container {
+            max-width: 450px;
+            margin: 6rem auto;
+            padding: 2.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: var(--shadow-premium);
+        }
+        .auth-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        .auth-tab {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0.3rem 1rem;
+            position: relative;
+        }
+        .auth-tab.active {
+            color: var(--accent-emerald);
+        }
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -9px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-emerald);
+            border-radius: 5px;
+        }
+        .auth-form-wrapper {
+            display: none;
+        }
+        .auth-form-wrapper.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Back to Website Nav -->
+    <nav class="navbar" style="position: absolute; background: transparent; border-bottom: none;">
+        <a href="index.html" class="logo">
+            Nextour <span class="logo-dot"></span>
+        </a>
+        <div class="nav-actions">
+            <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Day / Night Mode">
+                <div class="theme-toggle-thumb">🌙</div>
+            </div>
+            <a href="index.html" class="btn btn-outline">← Back to Site</a>
+        </div>
+    </nav>
+
+    <!-- Signed Out: Login / Register Interface -->
+    <div id="auth-panel" class="auth-container" style="display: none;">
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
+            <button class="auth-tab" onclick="switchAuthTab('register')">Register</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-form-wrapper" class="auth-form-wrapper active">
+            <form onsubmit="handleLoginSubmit(event)">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" class="form-control" placeholder="john_doe" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Sign In</button>
+            </form>
+            <div style="font-size:0.8rem; color:var(--text-secondary); text-align:center; margin-top:1.5rem;">
+                <p>Test Accounts (Username / Password):</p>
+                <p style="font-family:monospace; color:var(--accent-gold); margin-top:0.3rem;">
+                    Customer: john_doe / user123 <br>
+                    Vendor: homestay_owner / owner123 <br>
+                    Admin: admin / admin123
+                </p>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-form-wrapper" class="auth-form-wrapper">
+            <form onsubmit="handleRegisterSubmit(event)">
+                <div class="form-group">
+                    <label for="reg-username">Username</label>
+                    <input type="text" id="reg-username" class="form-control" placeholder="jane_doe" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Email Address</label>
+                    <input type="email" id="reg-email" class="form-control" placeholder="jane@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" class="form-control" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-role">Register As</label>
+                    <select id="reg-role" class="form-control" required>
+                        <option value="customer">Customer (Traveler)</option>
+                        <option value="vendor">Homestay Owner (Vendor)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signed In: Customer Portal Dashboard Layout -->
+    <div id="portal-panel" class="dashboard-layout" style="display: none;">
+        
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                Nextour <span class="logo-dot"></span>
+            </div>
+            
+            <div style="text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 1rem;">
+                <img id="user-avatar-display" src="" alt="Avatar" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid var(--accent-emerald); margin-bottom:0.8rem;">
+                <h4 id="user-name-display" style="color:#fff; margin-bottom:0.2rem;">John Doe</h4>
+                <span class="status-pill status-approved">Traveler Portal</span>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li><button class="active" onclick="switchDashboardTab('bookings-pane', this)">📁 My Bookings</button></li>
+                <li><button onclick="switchDashboardTab('profile-pane', this)">👤 Edit Profile</button></li>
+                <li>
+                    <button onclick="switchDashboardTab('notifs-pane', this)" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>🔔 Notifications</span>
+                        <span id="notif-badge-count" style="background:var(--danger); color:#fff; font-size:0.7rem; padding:0.1rem 0.5rem; border-radius:10px; font-weight:700; display:none;">0</span>
+                    </button>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <button class="btn btn-outline" style="width: 100%;" onclick="Auth.logout('portal.html')">Logout</button>
+            </div>
+        </div>
+
+        <!-- Main Workspace -->
+        <div class="dashboard-main">
+            
+            <!-- Tab Pane: Bookings -->
+            <div class="tab-pane active" id="bookings-pane">
+                <div class="dashboard-header">
+                    <div>
+                        <h2 style="font-size:2rem; margin-bottom:0.3rem;">My Bookings</h2>
+                        <p style="color:var(--text-secondary);">Manage your tour packages and homestay reservations.</p>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header-row">
+                        <h3 style="font-size:1.1rem; color:#fff;">Active & Historical Reservations</h3>
+                    </div>
+                    <table class="db-table">
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Service/Type</th>
+                                <th>Booking Name</th>
+                                <th>Details</th>
+                                <th>Total Cost</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookings-table-body">
+                            <!-- Populated dynamically by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Pane: Profile -->
+            <div class="tab-pane" id="profile-pane">
+                <div class="dashboard-header">
+                    <div>
+                        <h2 style="font-size:2rem; margin-bottom:0.3rem;">My Profile</h2>
+                        <p style="color:var(--text-secondary);">Update your contact details and account bio.</p>
+                    </div>
+                </div>
+
+                <div class="card" style="max-width: 600px; padding: 2.5rem;">
+                    <form onsubmit="handleProfileUpdate(event)">
+                        <div class="form-group">
+                            <label for="profile-phone">Contact Phone</label>
+                            <input type="tel" id="profile-phone" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-avatar">Profile Image URL</label>
+                            <input type="url" id="profile-avatar" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-bio">About Me (Bio)</label>
+                            <textarea id="profile-bio" class="form-control" rows="4" placeholder="Share your travel experiences..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tab Pane: Notifications -->
+            <div class="tab-pane" id="notifs-pane">
+                <div class="dashboard-header">
+                    <div>
+                        <h2 style="font-size:2rem; margin-bottom:0.3rem;">Notifications</h2>
+                        <p style="color:var(--text-secondary);">System alerts and host confirmations.</p>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="markAllNotificationsRead()">Mark All as Read</button>
+                </div>
+
+                <div id="notifications-list" style="display:flex; flex-direction:column; gap:1rem; max-width:800px;">
+                    <!-- Populated dynamically by JS -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Review Submission Modal -->
+    <div class="modal-overlay" id="review-modal">
+        <div class="modal" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3>Submit Travel Review</h3>
+                <button class="modal-close" onclick="closeModal('review-modal')">&times;</button>
+            </div>
+            <form onsubmit="handleReviewSubmit(event)">
+                <input type="hidden" id="rev-type">
+                <input type="hidden" id="rev-item-id">
+                <div class="modal-body">
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        Your review will be sent to the administrator queue for moderation before listing on the homepage.
+                    </p>
+                    <div class="form-group">
+                        <label for="rev-rating">Star Rating (1 to 5)</label>
+                        <select id="rev-rating" class="form-control" required>
+                            <option value="5">★★★★★ (5 Stars)</option>
+                            <option value="4">★★★★☆ (4 Stars)</option>
+                            <option value="3">★★★☆☆ (3 Stars)</option>
+                            <option value="2">★★☆☆☆ (2 Stars)</option>
+                            <option value="1">★☆☆☆☆ (1 Star)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="rev-comment">Review Comment</label>
+                        <textarea id="rev-comment" class="form-control" rows="4" placeholder="Describe your experience with this tour/homestay..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('review-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/portal.js"></script>
+</body>
+</html>

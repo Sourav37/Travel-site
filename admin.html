@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Nextour</title>
+    <!-- CSS File -->
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/theme.js"></script>
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 8rem auto;
+            padding: 2.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: var(--shadow-premium);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Back to Website Nav -->
+    <nav class="navbar" style="position: absolute; background: transparent; border-bottom: none;">
+        <a href="index.html" class="logo">
+            Nextour <span class="logo-dot"></span>
+        </a>
+        <div class="nav-actions">
+            <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Day / Night Mode">
+                <div class="theme-toggle-thumb">🌙</div>
+            </div>
+            <a href="index.html" class="btn btn-outline">← Back to Site</a>
+        </div>
+    </nav>
+
+    <!-- Signed Out: Login Interface -->
+    <div id="auth-panel" class="auth-container" style="display: none;">
+        <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center; color: var(--accent-emerald);">Admin Gateway</h3>
+        <form onsubmit="handleLoginSubmit(event)">
+            <div class="form-group">
+                <label for="login-username">Admin Username</label>
+                <input type="text" id="login-username" class="form-control" value="admin" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Enter Control Panel</button>
+        </form>
+    </div>
+
+    <!-- Signed In: Admin Control Panel Dashboard -->
+    <div id="portal-panel" class="dashboard-layout" style="display: none;">
+        
+        <!-- Sidebar Navigation -->
+        <div class="sidebar" style="width: 280px;">
+            <div class="sidebar-logo">
+                Nextour Admin <span class="logo-dot"></span>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li><button class="active" onclick="switchDashboardTab('overview-pane', this)">📊 System Overview</button></li>
+                <li><button onclick="switchDashboardTab('packages-pane', this)">✈️ Holiday Packages</button></li>
+                <li>
+                    <button onclick="switchDashboardTab('homestays-pane', this)" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>🏠 Homestays Approvals</span>
+                        <span id="badge-homestay-approvals" style="background:var(--accent-gold); color:#000; font-size:0.7rem; padding:0.1rem 0.5rem; border-radius:10px; font-weight:700; display:none;">0</span>
+                    </button>
+                </li>
+                <li><button onclick="switchDashboardTab('bookings-pane', this)">📁 Booking Operations</button></li>
+                <li>
+                    <button onclick="switchDashboardTab('users-pane', this)" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>👥 User Accounts</span>
+                        <span id="badge-vendor-approvals" style="background:var(--accent-gold); color:#000; font-size:0.7rem; padding:0.1rem 0.5rem; border-radius:10px; font-weight:700; display:none;">0</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchDashboardTab('reviews-pane', this)" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>🖊️ Moderation Queue</span>
+                        <span id="badge-review-moderations" style="background:var(--accent-gold); color:#000; font-size:0.7rem; padding:0.1rem 0.5rem; border-radius:10px; font-weight:700; display:none;">0</span>
+                    </button>
+                </li>
+                <li><button onclick="switchDashboardTab('cms-pane', this)">📝 Blogs & Offers</button></li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <button class="btn btn-outline" style="width: 100%;" onclick="Auth.logout('admin.html')">Logout Control</button>
+            </div>
+        </div>
+
+        <!-- Main Workspace -->
+        <div class="dashboard-main">
+            
+            <!-- Tab Pane: System Overview -->
+            <div class="tab-pane active" id="overview-pane">
+                <div class="dashboard-header">
+                    <div>
+                        <h2 style="font-size:2rem; margin-bottom:0.3rem;">System Dashboard</h2>
+                        <p style="color:var(--text-secondary);">Platform-wide statistics, revenue tracker, and recent audit trails.</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-title">Platform Revenue</span>
+                        <span class="stat-value" id="stats-revenue">₹0</span>
+                        <span class="stat-desc" style="color:var(--accent-emerald);">Paid transactions</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-title">Active Bookings</span>
+                        <span class="stat-value" id="stats-active-bookings">0</span>
+                        <span class="stat-desc" style="color:var(--accent-emerald);">Confirmed status</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-title">Total Users</span>
+                        <span class="stat-value" id="stats-total-users">0</span>
+                        <span class="stat-desc" style="color:var(--accent-emerald);">Customers & Hosts</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-title">Homestays Listed</span>
+                        <span class="stat-value" id="stats-homestays">0</span>
+                        <span class="stat-desc" style="color:var(--accent-emerald);">Approved on site</span>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header-row">
+                        <h3 style="font-size:1.1rem; color:#fff;">System Activity Log (Notifications Audit)</h3>
+                    </div>
+                    <table class="db-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Audited Action</th>
+                                <th>Activity Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-audit-log-body">
+                            <!-- Populated dynamically by notifications list -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Pane: Packages Management -->
+            <div class="tab-pane" id="packages-pane">
+                <div class="dashboard-header">
+                    <div>
+                        <h2 style="font-size:2rem; margin-bottom:0.3rem;">Holiday Packages Manager</h2>
+                        <p style="color:var(--text-secondary);">Configure tour itineraries, locations, highlights, and base pricing.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openNewPackageModal()">+ Create Package</button>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header-row">
+                        <h3 style="font-size:1.1rem; color:#fff;">Active Travel Packages</h3>
+                    </div>
+                    <table class="db-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Category</th>
+                                <th>Destination</th>
+                                <th>Package Name</th>
+                                <th>Duration</th>
+                                <th>Price per head</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-packages-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Pane: Homestay Approval Queue -->
+            <div class="tab-pane" id="homestays-pane">
+                <div class="dashboard-header">
+                    <div>
+                        <h2 style="font-size:2rem; margin-bottom:0.3rem;">Homestays Approvals Queue</h2>
+                        <p style="color:var(--text-secondary);">Review properties posted by vendors and approve them for listing.</p>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header-row">
+                        <h3 style="font-size:1.1rem; color:#fff;">Pending Approval Request</h3>
+                    </div>
+                    <table class="db-table">
+                        <thead>
+                            <tr>
+                                <th>Property ID</th>
+                                <th>Host Owner</th>
+                                <th>Property Name</th>
+                                <th>Location</th>
+                                <th>Rooms Configured</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-homestay-approvals-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Pane: Booking Operations -->
+            <div class="tab-pane" id="bookings-pane">
+                <div class="dashboard-header">
+                    <div>
+                        <h2 style="font-size:2rem; margin-bottom:0.3rem;">Booking Operations Control</h2>
+                        <p style="color:var(--text-secondary);">Verify payment flags, cancel bookings, or override reservation statuses.</p>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header-row">
+                        <h3 style="font-size:1.1rem; color:#fff;">Global Reservation Ledger</h3>
+                    </div>
+                    <table class="db-table">
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Type</th>
+                                <th>Service/Property Name</th>
+                                <th>Booked Dates</th>
+                                <th>Price Paid</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Override Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-bookings-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Pane: User Management -->
+            <div class="tab-pane" id="users-pane">
+                <div class="dashboard-header">
+                    <div>
+                        <h2 style="font-size:2rem; margin-bottom:0.3rem;">User Accounts Manager</h2>
+                        <p style="color:var(--text-secondary);">Approve host registries, check users role-based access controls, or suspend users.</p>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header-row">
+                        <h3 style="font-size:1.1rem; color:#fff;">Registered Portal Accounts</h3>
+                    </div>
+                    <table class="db-table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Assigned Role</th>
+                                <th>Status</th>
+                                <th>Moderations</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Pane: Review Moderation -->
+            <div class="tab-pane" id="reviews-pane">
+                <div class="dashboard-header">
+                    <div>
+                        <h2 style="font-size:2rem; margin-bottom:0.3rem;">Reviews Moderation Center</h2>
+                        <p style="color:var(--text-secondary);">Approve reviews before displaying them to public homepage testimonials.</p>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header-row">
+                        <h3 style="font-size:1.1rem; color:#fff;">Pending Review Moderations</h3>
+                    </div>
+                    <table class="db-table">
+                        <thead>
+                            <tr>
+                                <th>Review ID</th>
+                                <th>Author User</th>
+                                <th>Type</th>
+                                <th>Rating</th>
+                                <th>Comment Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-reviews-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Pane: Blogs & Offers CMS -->
+            <div class="tab-pane" id="cms-pane">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:2rem;">
+                    
+                    <!-- Blogs manager -->
+                    <div class="card" style="padding:2rem;">
+                        <h3 style="margin-bottom:1.5rem;">+ Create Travel Blog Post</h3>
+                        <form onsubmit="handleBlogSubmit(event)">
+                            <div class="form-group">
+                                <label for="blog-title">Blog Title</label>
+                                <input type="text" id="blog-title" class="form-control" placeholder="E.g., 5 Scenic Spots in Alleppey" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="blog-author">Author Name</label>
+                                    <input type="text" id="blog-author" class="form-control" value="Ronit Das" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="blog-tags">Tags (Comma separated)</label>
+                                    <input type="text" id="blog-tags" class="form-control" placeholder="Kerala, Beaches" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="blog-img">Image URL</label>
+                                <input type="url" id="blog-img" class="form-control" placeholder="https://images.unsplash.com/..." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="blog-content">Article Content</label>
+                                <textarea id="blog-content" class="form-control" rows="5" placeholder="Write full article here..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Publish Blog</button>
+                        </form>
+                    </div>
+
+                    <!-- Offers manager -->
+                    <div class="card" style="padding:2rem;">
+                        <h3 style="margin-bottom:1.5rem;">+ Generate Promotional Offer</h3>
+                        <form onsubmit="handleOfferSubmit(event)">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="off-code">Promo Code</label>
+                                    <input type="text" id="off-code" class="form-control" placeholder="E.g., SUMMER26" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="off-discount">Discount Percentage (%)</label>
+                                    <input type="number" id="off-discount" class="form-control" min="1" max="100" placeholder="20" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="off-expiry">Expiry Date</label>
+                                <input type="date" id="off-expiry" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="off-desc">Offer Description</label>
+                                <textarea id="off-desc" class="form-control" rows="3" placeholder="Flat 20% off on hill station stays..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create Promo Code</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Create Package Modal -->
+    <div class="modal-overlay" id="package-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Create Holiday Package</h3>
+                <button class="modal-close" onclick="closeModal('package-modal')">&times;</button>
+            </div>
+            <form onsubmit="handlePackageSubmit(event)">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pkg-name">Package Name</label>
+                            <input type="text" id="pkg-name" class="form-control" placeholder="E.g., Swiss Alps Luxury Tour" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pkg-category">Category</label>
+                            <input type="text" id="pkg-category" class="form-control" placeholder="E.g., Luxury & Mountains" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pkg-region">Geographical Focus</label>
+                            <select id="pkg-region" class="form-control" required>
+                                <option value="domestic">Domestic Tour</option>
+                                <option value="international">International Tour</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pkg-price">Price Per Person (₹)</label>
+                            <input type="number" id="pkg-price" class="form-control" placeholder="25000" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pkg-duration">Duration String</label>
+                            <input type="text" id="pkg-duration" class="form-control" placeholder="E.g., 6 Days / 5 Nights" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pkg-destination">Destination Cities</label>
+                            <input type="text" id="pkg-destination" class="form-control" placeholder="E.g., Zurich & Lucerne, Switzerland" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pkg-highlights">Key Highlights (Comma separated)</label>
+                        <input type="text" id="pkg-highlights" class="form-control" placeholder="E.g., Mount Titlis, Cable Car Ride, Lake Geneva Cruise" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pkg-image">Cover Banner Image URL</label>
+                        <input type="url" id="pkg-image" class="form-control" placeholder="https://images.unsplash.com/..." required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pkg-includes">Inclusions (Comma separated)</label>
+                            <input type="text" id="pkg-includes" class="form-control" placeholder="4-star Stays, Airport Cabs" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pkg-excludes">Exclusions (Comma separated)</label>
+                            <input type="text" id="pkg-excludes" class="form-control" placeholder="Airfare, Meals not detailed" required>
+                        </div>
+                    </div>
+                    <div style="background:var(--bg-tertiary); padding:1rem; border-radius:8px; border:1px solid var(--border-color); margin-top:0.5rem;">
+                        <h4 style="font-size:0.9rem; color:#fff; margin-bottom:0.5rem;">Quick 3-Day Outline (Mocked Day Details)</h4>
+                        <div class="form-group">
+                            <label>Day 1 Details</label>
+                            <input type="text" id="pkg-d1" class="form-control" value="Arrival & Hotel Check-in. Local sightseeing." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Day 2 Details</label>
+                            <input type="text" id="pkg-d2" class="form-control" value="Guided day excursion to primary valley landmarks." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Day 3 Details</label>
+                            <input type="text" id="pkg-d3" class="form-control" value="Hotel check-out. Airport transfer for departure." required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('package-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Publish Package</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

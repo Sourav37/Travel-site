@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host Portal - Nextour</title>
+    <!-- CSS File -->
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/theme.js"></script>
+    <style>
+        .auth-container {
+            max-width: 450px;
+            margin: 6rem auto;
+            padding: 2.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: var(--shadow-premium);
+        }
+        .auth-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        .auth-tab {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0.3rem 1rem;
+            position: relative;
+        }
+        .auth-tab.active {
+            color: var(--accent-emerald);
+        }
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -9px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-emerald);
+            border-radius: 5px;
+        }
+        .auth-form-wrapper {
+            display: none;
+        }
+        .auth-form-wrapper.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Back to Website Nav -->
+    <nav class="navbar" style="position: absolute; background: transparent; border-bottom: none;">
+        <a href="index.html" class="logo">
+            Nextour <span class="logo-dot"></span>
+        </a>
+        <div class="nav-actions">
+            <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Day / Night Mode">
+                <div class="theme-toggle-thumb">🌙</div>
+            </div>
+            <a href="index.html" class="btn btn-outline">← Back to Site</a>
+        </div>
+    </nav>
+
+    <!-- Signed Out: Login / Register Interface -->
+    <div id="auth-panel" class="auth-container" style="display: none;">
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchAuthTab('login')">Host Login</button>
+            <button class="auth-tab" onclick="switchAuthTab('register')">Register Host</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-form-wrapper" class="auth-form-wrapper active">
+            <form onsubmit="handleLoginSubmit(event)">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" class="form-control" placeholder="homestay_owner" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Log In as Host</button>
+            </form>
+            <div style="font-size:0.8rem; color:var(--text-secondary); text-align:center; margin-top:1.5rem;">
+                <p>Register to list your homestay. Accounts are subject to Admin approval before listing.</p>
+                <p style="margin-top:0.5rem; color:var(--accent-gold);">Use standard owner account: <strong>homestay_owner / owner123</strong></p>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-form-wrapper" class="auth-form-wrapper">
+            <form onsubmit="handleRegisterSubmit(event)">
+                <div class="form-group">
+                    <label for="reg-username">Username</label>
+                    <input type="text" id="reg-username" class="form-control" placeholder="mountain_retreats" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Email Address</label>
+                    <input type="email" id="reg-email" class="form-control" placeholder="retreats@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" class="form-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Submit Registration Request</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signed In: Vendor Dashboard Panel -->
+    <div id="portal-panel" class="dashboard-layout" style="display: none;">
+        
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                Nextour <span class="logo-dot"></span>
+            </div>
+            
+            <div style="text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 1rem;">
+                <img id="user-avatar-display" src="" alt="Avatar" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid var(--accent-emerald); margin-bottom:0.8rem;">
+                <h4 id="user-name-display" style="color:#fff; margin-bottom:0.2rem;">Owner</h4>
+                <span class="status-pill status-approved">Approved Host</span>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li><button class="active" onclick="switchDashboardTab('overview-pane', this)">📊 Dashboard</button></li>
+                <li><button onclick="switchDashboardTab('properties-pane', this)">🏠 My Properties</button></li>
+                <li>
+                    <button onclick="switchDashboardTab('requests-pane', this)" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>📥 Booking Requests</span>
+                        <span id="requests-badge-count" style="background:var(--accent-gold); color:#000; font-size:0.7rem; padding:0.1rem 0.5rem; border-radius:10px; font-weight:700; display:none;">0</span>
+                    </button>
+                </li>
+                <li><button onclick="switchDashboardTab('profile-pane', this)">👤 Host Profile</button></li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <button class="btn btn-outline" style="width: 100%;" onclick="Auth.logout('owner.html')">Logout</button>
+            </div>
+        </div>
+
+        <!-- Main Workspace -->
+        <div class="dashboard-main">
+            
+            <!-- Tab Pane: Overview -->
+            <div class="tab-pane active" id="overview-pane">
+                <div class="dashboard-header">
+                    <div>
+                        <h2 style="font-size:2rem; margin-bottom:0.3rem;">Host Dashboard Overview</h2>
+                        <p style="color:var(--text-secondary);">Track property views, pending reserves, and host earnings.</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-title">Total Earnings</span>
+                        <span class="stat-value" id="stats-earnings">₹0</span>
+                        <span class="stat-desc" style="color:var(--accent-emerald);">Prepaid & On-spot</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-title">Active Listings</span>
+                        <span class="stat-value" id="stats-properties">0</span>
+                        <span class="stat-desc" style="color:var(--accent-emerald);">Properties approved</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-title">Booking Requests</span>
+                        <span class="stat-value" id="stats-requests">0</span>
+                        <span class="stat-desc" id="stats-requests-desc" style="color:var(--accent-gold);">0 Pending approval</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-title">Guest Ratings</span>
+                        <span class="stat-value">★ 4.9</span>
+                        <span class="stat-desc" style="color:var(--accent-emerald);">Excellent feedback</span>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header-row">
+                        <h3 style="font-size:1.1rem; color:#fff;">Recent Bookings</h3>
+                    </div>
+                    <table class="db-table">
+                        <thead>
+                            <tr>
+                                <th>Guest Phone</th>
+                                <th>Dates</th>
+                                <th>Room Type</th>
+                                <th>Guests</th>
+                                <th>Total Price</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-bookings-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Pane: Properties & Rooms -->
+            <div class="tab-pane" id="properties-pane">
+                <div class="dashboard-header">
+                    <div>
+                        <h2 style="font-size:2rem; margin-bottom:0.3rem;">My Properties</h2>
+                        <p style="color:var(--text-secondary);">Manage homestay descriptions, rates, rules, and rooms.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openNewPropertyModal()">+ Add New Property</button>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr; gap:2rem;" id="owner-properties-list">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Tab Pane: Booking Requests -->
+            <div class="tab-pane" id="requests-pane">
+                <div class="dashboard-header">
+                    <div>
+                        <h2 style="font-size:2rem; margin-bottom:0.3rem;">Booking Approval Center</h2>
+                        <p style="color:var(--text-secondary);">Review requests submitted by customers and approve or deny them.</p>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header-row">
+                        <h3 style="font-size:1.1rem; color:#fff;">Pending Reservations</h3>
+                    </div>
+                    <table class="db-table">
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Homestay Name</th>
+                                <th>Room Type</th>
+                                <th>Check-in/Out</th>
+                                <th>Guests Count</th>
+                                <th>Payout Price</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pending-requests-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Pane: Profile -->
+            <div class="tab-pane" id="profile-pane">
+                <div class="dashboard-header">
+                    <div>
+                        <h2 style="font-size:2rem; margin-bottom:0.3rem;">Host Profile</h2>
+                        <p style="color:var(--text-secondary);">Manage your host settings and contact details.</p>
+                    </div>
+                </div>
+
+                <div class="card" style="max-width: 600px; padding: 2.5rem;">
+                    <form onsubmit="handleProfileUpdate(event)">
+                        <div class="form-group">
+                            <label for="profile-phone">Contact Phone</label>
+                            <input type="tel" id="profile-phone" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-avatar">Profile Image URL</label>
+                            <input type="url" id="profile-avatar" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Save Host Details</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Add Property Modal -->
+    <div class="modal-overlay" id="property-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add New Property</h3>
+                <button class="modal-close" onclick="closeModal('property-modal')">&times;</button>
+            </div>
+            <form onsubmit="handlePropertySubmit(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="prop-name">Property Name</label>
+                        <input type="text" id="prop-name" class="form-control" placeholder="E.g., Whispering Pines Cottage" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="prop-location">Location (City, State)</label>
+                            <input type="text" id="prop-location" class="form-control" placeholder="E.g., Manali, HP" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prop-gps">GPS Coordinates (Lat, Lng)</label>
+                            <input type="text" id="prop-gps" class="form-control" placeholder="E.g., 32.2396, 77.1887" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="prop-desc">Description</label>
+                        <textarea id="prop-desc" class="form-control" rows="3" placeholder="Tell travelers what makes your place special..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="prop-amenities">Amenities (Comma separated)</label>
+                        <input type="text" id="prop-amenities" class="form-control" placeholder="E.g., Free WiFi, Fireplace, Kitchen, Parking" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prop-rules">House Rules (Comma separated)</label>
+                        <input type="text" id="prop-rules" class="form-control" placeholder="E.g., No pets, Quiet after 10PM" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prop-image">Cover Image URL</label>
+                        <input type="url" id="prop-image" class="form-control" placeholder="https://images.unsplash.com/..." required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('property-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Property</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Room Modal -->
+    <div class="modal-overlay" id="room-modal">
+        <div class="modal" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3>Add Room Type</h3>
+                <button class="modal-close" onclick="closeModal('room-modal')">&times;</button>
+            </div>
+            <form onsubmit="handleRoomSubmit(event)">
+                <input type="hidden" id="room-property-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="rm-type">Room Type Name</label>
+                        <input type="text" id="rm-type" class="form-control" placeholder="E.g., Luxury Attic Bed" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="rm-capacity">Max Guests Capacity</label>
+                            <input type="number" id="rm-capacity" class="form-control" min="1" max="10" value="2" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rm-price">Price Per Night (₹)</label>
+                            <input type="number" id="rm-price" class="form-control" min="1" placeholder="3500" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rm-quantity">Quantity Available</label>
+                        <input type="number" id="rm-quantity" class="form-control" min="1" value="2" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('room-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Room</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/owner.js"></script>
+</body>
+</html>
