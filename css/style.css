@@ -1131,47 +1131,314 @@ a {
     }
 }
 
-/* Mobile responsive adjustments */
+/* ===== Mobile Responsive Adjustments ===== */
+
+/* Navigation Hamburger Button */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 24px;
+    height: 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 1050;
+    padding: 0;
+}
+
+.nav-toggle span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: var(--text-primary);
+    border-radius: 2px;
+    transition: var(--transition-smooth);
+}
+
+/* Hamburger to X transition */
+.nav-toggle.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Tablet / Laptop Breakpoint */
 @media (max-width: 1024px) {
     .navbar {
         padding: 0 2rem;
     }
+    .section {
+        padding: 4rem 2rem;
+    }
     .grid-cards {
         grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
     }
     .services-grid {
         grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .navbar {
-        padding: 0 1rem;
-    }
-    .nav-links {
-        display: none; /* simple burger menu could be implemented */
-    }
-    .hero h1 {
-        font-size: 2.5rem;
-    }
-    .search-form {
-        grid-template-columns: 1fr;
-    }
-    .grid-cards {
-        grid-template-columns: 1fr;
-    }
-    .services-grid {
-        grid-template-columns: 1fr;
+        gap: 1.2rem;
     }
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+}
+
+/* Mobile Breakpoint */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 1.25rem;
+        height: 60px;
+    }
+    .logo {
+        font-size: 1.4rem;
+    }
+    .main-content {
+        margin-top: 60px;
+    }
+
+    /* Mobile Drawer Main Nav */
+    .nav-toggle {
+        display: flex;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 100vh;
+        background: var(--bg-secondary);
+        border-left: 1px solid var(--border-color);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 6rem 2rem 2rem;
+        gap: 1.5rem;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+        box-shadow: var(--shadow-premium);
+        overflow-y: auto;
+    }
+
+    .nav-links.active {
+        transform: translateX(-100%);
+    }
+
+    .nav-links a {
+        font-size: 1.1rem;
+        width: 100%;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .nav-actions {
+        display: none; /* We hide the standalone desktop actions and will adapt layout */
+    }
+    
+    /* Modify desktop action layout inside drawer or keep it simple */
+    .navbar #nav-actions-container {
+        display: flex;
+        gap: 0.8rem;
+        margin-right: 1rem;
+    }
+    
+    .navbar #nav-actions-container .btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    /* Hero Responsive */
+    .hero {
+        padding: 4rem 1.25rem 3rem;
+        min-height: auto;
+    }
+
+    .hero h1 {
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero p {
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Search engine responsive */
+    .search-container {
+        padding: 1.2rem;
+        border-radius: 16px;
+    }
+
+    .search-tabs {
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .search-tab-btn {
+        font-size: 0.85rem;
+        padding: 0.25rem 0.6rem;
+    }
+
+    .search-form {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+
+    .search-form .btn {
+        width: 100%;
+        margin-top: 0.5rem;
+        padding: 0.8rem;
+    }
+
+    /* General Layout Padding */
+    .section {
+        padding: 3rem 1.25rem;
+    }
+
+    .section-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+    }
+
+    .grid-cards {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    /* Modals Responsive */
+    .modal {
+        width: 95%;
+        margin: 1rem auto;
+        border-radius: 16px;
+    }
+
+    .modal-header {
+        padding: 1rem 1.2rem;
+    }
+
+    .modal-body {
+        padding: 1.2rem;
+        max-height: 75vh;
+    }
+
+    .modal-footer {
+        padding: 1rem 1.2rem;
+        flex-direction: column-reverse;
+        gap: 0.5rem;
+    }
+
+    .modal-footer .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Dashboard Layout Responsive */
     .dashboard-layout {
         flex-direction: column;
     }
+
     .sidebar {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100vh;
+        z-index: 1200;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: var(--shadow-premium);
+    }
+
+    .sidebar.active {
+        transform: translateX(100%);
+    }
+
+    .dashboard-main {
+        padding: 1.2rem;
+        max-height: none;
+        overflow-y: visible;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .dashboard-header h2 {
+        font-size: 1.5rem !important;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+        padding: 1.2rem;
+    }
+
+    /* Responsive Scrollable Tables */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .db-table {
+        min-width: 600px;
+    }
+
+    .db-table th, .db-table td {
+        padding: 0.8rem 1rem;
+    }
+
+    /* Form Rows responsive stacking */
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+
+    /* FAQ items padding */
+    .faq-trigger {
+        padding: 1rem 1.2rem;
+        font-size: 1rem;
+    }
+
+    .faq-answer {
+        padding: 0 1.2rem 1rem;
+        font-size: 0.88rem;
+    }
+}
+
+/* Extra Small Screens */
+@media (max-width: 480px) {
+    .navbar #nav-actions-container .btn-primary {
+        display: none; /* Hide Host Homestay button on very small screens to fit sign in */
+    }
+    
+    .logo-dot {
+        display: none;
+    }
+    
+    .toast {
+        min-width: calc(100vw - 40px);
+        bottom: 20px;
+        right: 20px;
+        left: 20px;
     }
 }
